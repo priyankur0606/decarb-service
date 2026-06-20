@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engine Decarbonization Pro</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:#050505;
+color:white;
+overflow-x:hidden;
+}
+
+/* Animated Background */
+
+.hero{
+height:100vh;
+background:
+linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.8)),
+url('https://images.unsplash.com/photo-1487754180451-c456f719a1fc?q=80&w=1620');
+background-size:cover;
+background-position:center;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+position:relative;
+}
+
+.hero::before{
+content:'';
+position:absolute;
+width:400px;
+height:400px;
+background:#ff4500;
+filter:blur(180px);
+opacity:.25;
+animation:glow 4s infinite alternate;
+}
+
+@keyframes glow{
+from{transform:scale(1);}
+to{transform:scale(1.3);}
+}
+
+.hero-content{
+position:relative;
+z-index:2;
+max-width:900px;
+padding:20px;
+}
+
+.hero h1{
+font-size:4rem;
+font-weight:900;
+text-transform:uppercase;
+background:linear-gradient(90deg,#ff4500,#ffae00);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.hero p{
+font-size:1.2rem;
+margin:20px 0;
+color:#ddd;
+}
+
+.btn{
+display:inline-block;
+padding:22px 60px;
+font-size:24px;
+font-weight:800;
+letter-spacing:1px;
+text-transform:uppercase;
+background:linear-gradient(90deg,#ff4500,#ffae00);
+color:#fff;
+border-radius:60px;
+box-shadow:0 0 30px rgba(255,69,0,.6);
+transition:all .3s ease;
+}
+
+.btn:hover{
+transform:scale(1.05);
+}
+
+section{
+padding:80px 8%;
+}
+
+.title{
+text-align:center;
+font-size:2.5rem;
+margin-bottom:50px;
+color:#ffae00;
+}
+
+/* Benefits */
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+}
+
+.card{
+background:#111;
+padding:30px;
+border-radius:20px;
+transition:.4s;
+border:1px solid #222;
+}
+
+.card:hover{
+transform:translateY(-10px);
+box-shadow:0 0 30px rgba(255,69,0,.4);
+}
+
+.card h3{
+margin-bottom:10px;
+color:#ff4500;
+}
+
+/* Before After */
+
+.compare{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:30px;
+}
+
+.box{
+background:#111;
+padding:40px;
+border-radius:20px;
+text-align:center;
+}
+
+.before{
+border-left:5px solid red;
+}
+
+.after{
+border-left:5px solid lime;
+}
+
+/* Pricing */
+
+.price-box{
+max-width:600px;
+margin:auto;
+background:#111;
+padding:40px;
+border-radius:20px;
+text-align:center;
+box-shadow:0 0 30px rgba(255,69,0,.3);
+}
+
+.price{
+font-size:3rem;
+font-weight:900;
+color:#ffae00;
+margin:15px 0;
+}
+
+/* Contact */
+
+.contact{
+text-align:center;
+}
+
+.contact p{
+margin:10px 0;
+font-size:1.1rem;
+}
+
+footer{
+padding:20px;
+text-align:center;
+background:#111;
+color:#aaa;
+}
+
+@media(max-width:768px){
+
+.hero h1{
+font-size:2.5rem;
+}
+
+.compare{
+grid-template-columns:1fr;
+}
+
+}
+
+</style>
+</head>
+<body>
+
+<section class="hero">
+
+<div class="hero-content">
+<h1>Engine Decarbonization</h1>
+
+<p>
+Restore Lost Power • Improve Mileage • Reduce Smoke • Smooth Engine Performance
+</p>
+<br><br><br><br>
+
+
+<section style="padding:50px 20px; text-align:center; background:#111;">
+
+<!--<h2 style="color:#00ff88;">-->
+  <h2 style="font-size:32px; color:#00ff88;">
+🛠 No Major Engine Disassembly Required
+</h2><br>
+
+<p style="max-width:700px; margin:auto; color:#ddd;">
+Our advanced engine decarbonization process cleans carbon deposits just in 45min for cars and 15min for Bikes without opening major engine components, ensuring a safe, hassle-free service.
+</p>
+
+</section>
+
+
+
+</div>
+
+</section>
+
+<section>
+
+<h2 class="title">Why Choose Engine Decarb?</h2>
+
+<div class="cards">
+
+<div class="card">
+<h3>🚗 Better Pickup</h3>
+<p>
+Removes carbon deposits affecting engine performance.
+</p>
+</div>
+
+<div class="card">
+<h3>⛽ Better Mileage</h3>
+<p>
+Cleaner combustion means improved fuel efficiency.
+</p>
+</div>
+
+<div class="card">
+<h3>💨 Less Smoke</h3>
+<p>
+Reduces black smoke and emissions from diesel engines.
+</p>
+</div>
+
+<div class="card">
+<h3>🔧 Longer Engine Life</h3>
+<p>
+Prevents carbon build-up in EGR, intake and combustion chamber.
+</p>
+</div>
+
+<div class="card">
+<h3>⚡Instant Effect</h3>
+<p>
+Feel the difference instantly with smoother driving Experience.
+</p>
+</div>
+
+</div>
+
+</section>
+
+<section>
+
+<h2 class="title">Before vs After</h2>
+
+<div class="compare">
+
+<div class="box before">
+<h3>❌ Before</h3>
+<br>
+<p>Sluggish Pickup</p>
+<p>Reduced Mileage</p>
+<p>Black Smoke</p>
+<p>Carbon Deposits</p>
+<p>Engine Vibration</p>
+</div>
+
+<div class="box after">
+<h3>✅ After</h3>
+<br>
+<p>Improved Acceleration</p>
+<p>Better Fuel Economy</p>
+<p>Cleaner Exhaust</p>
+<p>Cleaner Intake System</p>
+<p>Smoother Engine</p>
+</div>
+
+</div>
+
+</section>
+
+<section>
+
+<h2 class="title">Suitable For</h2>
+
+<div class="cards">
+
+<div class="card">
+<h3>Cars</h3>
+<p>Petrol & Diesel Vehicles</p>
+</div>
+
+<div class="card">
+<h3>SUVs</h3>
+<p>XUV700, Scorpio, Fortuner etc.</p>
+</div>
+
+
+
+<div class="card">
+<h3>Luxury Vehicles</h3>
+<p>BMW, Audi, Mercedes & More</p>
+</div>
+
+<div class="card">
+<h3>Bikes N Scooters</h3>
+<p>Bajaj, Hero, TVS</p>
+</div>
+
+</div>
+
+<section>
+
+<div class="price-box">
+
+<h2>Lowest Price In Market</h2>
+<br>
+<div style="font-size:18px; line-height:1.8; text-align:center; max-width:350px; margin:auto;">
+  ✅ Car Upto 1200cc Engine – <strong>₹1200</strong><br>
+  ✅ Car Above 1200cc Engine – <strong>₹1500</strong><br><br>
+  ✅ Bike Upto 150cc Engine – <strong>₹300</strong><br>
+  ✅ Bike Above 150cc Engine – <strong>₹400</strong><br>
+
+</div>
+
+</section>
+
+<h2 class="title">Book Your SLOT And Pay On The SPOT</h2>
+
+<div class="card" style="text-align:center;">
+
+
+<a href="booking.html" target="_blank" class="btn">
+BOOK SLOT
+</a>
+
+</div>
+
+</section>
+
+<footer>
+
+© 2026 Engine Decarbonization Pro | All Rights Reserved
+
+</footer>
+
+</body>
+</html>
