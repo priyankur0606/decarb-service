@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Engine Decarbonization Booking</title>
+
+<style>
+body{font-family:Arial;background:#f4f4f4;padding:20px;margin:0;}
+
+.container{
+    max-width:700px;
+    margin:auto;
+    background:#fff;
+    padding:25px;
+    border-radius:10px;
+}
+
+label{font-weight:bold;}
+
+input,select,button{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border-radius:5px;
+    border:1px solid #ccc;
+}
+
+button{
+    background:#0d6efd;
+    color:white;
+    font-size:16px;
+}
+
+.success{background:#d1e7dd;padding:10px;}
+.error{background:#f8d7da;padding:10px;}
+
+#whatsappBtn{
+    background:#25D366;
+    display:none;
+    color:white;
+}
+
+option:disabled{
+    color:#999;
+    background:#f2f2f2;
+}
+
+.required-star {
+    color: red;
+    font-weight: bold;
+    margin-left: 3px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>🚗 Engine Booking</h2>
+
+<form id="bookingForm">
+
+<label>Society Name</label>
+<select id="society"><option value="">Select</option></select>
+
+<label>Customer Name <span class="required-star">*</span></label>
+<input id="customerName" required>
+
+<label>Mobile Number <span class="required-star">*</span></label>
+<input id="mobile" required pattern="[0-9]{10}" maxlength="10" inputmode="numeric" oninvalid="this.setCustomValidity('Please enter 10 digit mobile number')"
+       oninput="this.setCustomValidity('')">
+
+<label>Vehicle Registration No.  <span class="required-star">*</span></label>
+<input id="vehicleNumber" required>
+
+<label>KM Driven</label>
+<input id="kmDriven">
+
+<label>Car Make<span class="required-star">*</span></label>
+<select id="carMake" required>  <option value="">Select Make</option></select>
+
+<label>Car Model<span class="required-star">*</span></label>
+<select id="carModel"required>  <option value="">Select Model</option></select>
+
+<label>Fuel Type</label>
+<select id="fuelType">
+<option>Petrol</option>
+<option>Diesel</option>
+
+</select>
+
+<label>Available Date<span class="required-star">*</span></label>
+<select id="serviceDate" required> <option value="">Select Date</option></select>
+
+<label>Available Time Slot<span class="required-star">*</span></label>
+<select id="timeSlot" required><option value="">Select Time</option></select>
+
+<button type="submit">Book Slot</button>
+
+</form>
+
+<button id="whatsappBtn">Send To WhatsApp</button>
+
+<div id="message"></div>
+
+</div>
+
+<script>
+
+const API_URL =
+"https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec";
+
+let bookedMap = {};
+let carData = {};
+let whatsappUrl = "";
+let societyConfig = {};
+
+function loadBookedMap(callback){
+
+ fetch(API_URL + "?action=getBookedData")
+ .then(r=>r.json())
+ .then(data=>{
+
+   bookedMap = data;
+
+   console.log("Booked map refreshed:", bookedMap);
+
+   if(callback) callback();
+
+ });
+
+}
+
+loadBookedMap();
+
+
+
+
+/* =========================
+   RESET UI AFTER SUBMIT
+========================= */
+function resetFormToDefault() {
+
+    const form = document.getElementById("bookingForm");
+
+    form.reset();
+
+    // reset society to default placeholder
+    document.getElementById("society").value = "";
+
+    // trigger change → clears & reloads date UI
+    document.getElementById("society")
+        .dispatchEvent(new Event("change"));
+
+    // reset time slot
+    document.getElementById("timeSlot").innerHTML =
+        "<option value=''>Select Date First</option>";
+
+    // hide WhatsApp button
+    //document.getElementById("whatsappBtn").style.display = "none";
+
+   // whatsappUrl = "";
+
+       // 🔥 REFRESH BOOKED DATA HERE
+    loadBookedMap(function () {
+        console.log("Booked slots updated after reset");
+    });
+}
+/* =========================
+   SOCIETY LOAD
+========================= */
+fetch(API_URL + "?action=getSocieties")
+.then(r=>r.json())
+.then(data=>{
+
+    const society = document.getElementById("society");
+
+    data.forEach(r=>{
+
+        societyConfig[r.society] = r;
+
+        let opt = document.createElement("option");
+        opt.value = r.society;
+        opt.text = r.society;
+
+        society.add(opt);
+
+    });
+
+});
+
+/* =========================
+   CAR DATA
+========================= */
+fetch(API_URL + "?action=getCarData")
+.then(r=>r.json())
+.then(data=>{
+
+    carData = data;
+
+    const make = document.getElementById("carMake");
+
+    Object.keys(data).forEach(k=>{
+
+        let opt = document.createElement("option");
+        opt.value = k;
+        opt.text = k;
+
+        make.add(opt);
+
+    });
+
+});
+
+/* =========================
+   MODEL
+========================= */
+document.getElementById("carMake").onchange = function(){
+
+    const model = document.getElementById("carModel");
+    model.innerHTML = "";
+
+    if(!carData[this.value]) return;
+
+    carData[this.value].forEach(m=>{
+        let opt = document.createElement("option");
+        opt.value = m;
+        opt.text = m;
+        model.add(opt);
+    });
+};
+
+/* =========================
+   DATE RANGE
+========================= */
+function generateDates(start,end){
+
+    let arr=[];
+    let d=new Date(start);
+    let last=new Date(end);
+
+    while(d<=last){
+        arr.push(d.toISOString().split("T")[0]);
+        d.setDate(d.getDate()+1);
+    }
+    return arr;
+}
+
+document.getElementById("society").onchange = function(){
+
+    let s = societyConfig[this.value];
+    let date = document.getElementById("serviceDate");
+
+    date.innerHTML="";
+
+    let defaultOpt = document.createElement("option");
+    defaultOpt.value = "";
+    defaultOpt.text = "Select Date";
+    defaultOpt.selected = true;
+    defaultOpt.disabled = true;
+    date.add(defaultOpt);
+
+    if(!s) return;
+
+    generateDates(s.startDate,s.endDate).forEach(d=>{
+        let opt=document.createElement("option");
+        opt.value=d;
+        opt.text=d;
+        date.add(opt);
+    });
+
+    document.getElementById("timeSlot").innerHTML =
+        "<option>Select Date First</option>";
+};
+
+/* =========================
+   SLOT LOAD
+========================= */
+document.getElementById("serviceDate").onchange = function () {
+
+    const selectedDate = this.value;
+
+    const slots = [
+        "09:00 AM","09:45 AM","10:30 AM","11:15 AM",
+        "12:00 PM","12:45 PM","01:30 PM","02:15 PM",
+        "03:00 PM","03:45 AM","04:30 PM","05:15 PM",
+        "06:00 PM","06:45 PM","07:30 PM"
+    ];
+
+    const booked = bookedMap[selectedDate] || [];
+
+    console.log("booked :", booked);  // ✅ DEBUG LINE
+
+    console.log("Selected Date:", selectedDate);  // ✅ DEBUG LINE
+
+    const dropdown = document.getElementById("timeSlot");
+    console.log("TimeSlot dropdown element:", dropdown);
+    dropdown.innerHTML = "";
+
+    slots.forEach(slot => {
+
+        const opt = document.createElement("option");
+        opt.value = slot;
+        opt.text = slot;
+
+        console.log("opt,value:", slot);
+
+        if (booked.includes((slot))) {
+            opt.disabled = true;
+            opt.text = slot + " (Booked)";
+        }
+
+        dropdown.add(opt);
+    });
+};
+/* =========================
+   BOOKING (NO FREEZE)
+========================= */
+document.getElementById("bookingForm").onsubmit = function(e){
+
+    e.preventDefault();
+
+    const btn = document.querySelector("button[type='submit']");
+    btn.disabled = true;
+    btn.innerText = "Booking...";
+
+    const data = {
+        society: society.value,
+        customerName: customerName.value,
+        mobile: mobile.value,
+        vehicleNumber: vehicleNumber.value,
+        kmDriven: kmDriven.value,
+        carMake: carMake.value,
+        carModel: carModel.value,
+        fuelType: fuelType.value,
+        serviceDate: serviceDate.value,
+        timeSlot: timeSlot.value
+    };
+
+    fetch(API_URL,{
+    method:"POST",
+    headers:{
+        "Content-Type":"application/json"
+    },
+    body:JSON.stringify({
+        action:"saveBooking",
+        data:data
+    })
+})
+.then(r=>r.json())
+.then(function(res){
+
+    btn.disabled = false;
+    btn.innerText = "Book Slot";
+
+    if(res.success){
+
+        const phone =
+        data.mobile.replace(/\D/g,"");
+
+        whatsappUrl =
+        "https://wa.me/91"+phone+
+        "?text="+encodeURIComponent(
+            "Booking ID: "+res.bookingId+
+            "\nDate: "+data.serviceDate+
+            "\nTime: "+data.timeSlot
+        );
+
+        message.innerHTML =
+        "<div class='success'>Booking Confirmed "
+        + res.bookingId +
+        "</div>";
+
+        whatsappBtn.style.display = "block";
+
+        setTimeout(() => {
+            resetFormToDefault();
+        },1500);
+
+    }else{
+
+        message.innerHTML =
+        "<div class='error'>"
+        + res.message +
+        "</div>";
+
+    }
+
+})
+.catch(function(err){
+
+    btn.disabled = false;
+    btn.innerText = "Book Slot";
+
+    message.innerHTML =
+    "<div class='error'>"
+    + err.message +
+    "</div>";
+
+});
+};
+
+whatsappBtn.onclick = function(){
+    window.open(whatsappUrl);
+};
+
+</script>
+
+</body>
+</html>
